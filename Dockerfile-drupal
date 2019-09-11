@@ -1,0 +1,25 @@
+FROM drupal:8-apache
+
+# Update and install misc
+RUN apt-get update \
+    && apt-get install -yq \
+        vim \
+        unzip \
+    && cd /tmp
+
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer \
+    && chmod +x /usr/local/bin/composer
+
+# Install prestissimo
+RUN composer global require hirak/prestissimo
+
+# Install Drush
+RUN composer global require drush/drush
+
+# Update dependencies
+RUN composer global update
+
+WORKDIR /var/www/html
+EXPOSE 80
